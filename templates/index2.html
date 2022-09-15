@@ -1,0 +1,21 @@
+<HtML>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-6 mx-auto mt-5">
+                    <h1 id="app">{{text}}</h1>
+                </div>
+            </div>
+        </div>
+        <script>
+
+            var socket = new WebSocket('ws://localhost:8000/ws/consumer1/');
+            socket.onmessage = function(event){
+                var data = JSON.parse(event.data);
+                console.log(data);
+                document.querySelector('#app').innerText = data.message;
+            }
+        </script>
+
+    </body>
+</HtML>
