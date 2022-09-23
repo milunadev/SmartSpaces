@@ -30,7 +30,7 @@ def on_message(client, userdata, message):
         global message_dic
         message = json.loads(message.payload.decode("utf-8")) 
         metrics = '\n' + message['mrMac'] + ',' + message['clientMac'] + ',' +message['rssi'] 
-        if message['clientMac']== '00:FA:B6:01:E8:49': #00:FA:B6:01:E8:49': or message['clientMac'] == '00:FA:B6:01:E8:5B' or message['clientMac'] == '00:FA:B6:01:E8:6D':
+        if message['clientMac']== '00:FA:B6:01:E8:5B': #00:FA:B6:01:E8:49': or message['clientMac'] == '00:FA:B6:01:E8:5B' or message['clientMac'] == '00:FA:B6:01:E8:6D':
             print(message['mrMac'] + '    ' + message['clientMac'] + '    ' +message['rssi']) 
         #print(message['mrMac'] + '    ' + message['clientMac'] + '    ' +message['rssi']) 
             message_dic.append(metrics)
@@ -53,7 +53,7 @@ def almacenar(lista,topic):
     if topic == topic74: ap='74' 
     elif topic == topic33: ap = '33'  
     else: ap = '44'
-    with open('./files/mqtt_message_mR{}_3m2.csv'.format(ap),mode="w", newline='\n') as newfile:
+    with open('./files/mqtt_message_mR{}_1m2.csv'.format(ap),mode="w", newline='\n') as newfile:
         writer = csv.writer(newfile)
         writer.writerow(lista)
 
@@ -81,7 +81,7 @@ def toma_muestra(topics):
         client.disconnect()
 
 
-general(broker)
+#general(broker)
 
 def camara():
     global clientmv , personas, n_personas
