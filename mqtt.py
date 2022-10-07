@@ -33,11 +33,15 @@ def on_message(client, userdata, message):
         if message['clientMac']== '00:FA:B6:01:E8:5B': #00:FA:B6:01:E8:49': or message['clientMac'] == '00:FA:B6:01:E8:5B' or message['clientMac'] == '00:FA:B6:01:E8:6D':
             print(message['mrMac'] + '    ' + message['clientMac'] + '    ' +message['rssi']) 
         #print(message['mrMac'] + '    ' + message['clientMac'] + '    ' +message['rssi']) 
-            message_dic.append(metrics)
+            message_dic.append(message['rssi'])
+        filtro_max_min(message_dic)
         return message_dic
         #file = open('mqtt_message_mR74.txt',mode="w")
         #file.write(str(message_dic))
         #file.close()
+
+def filtro_max_min(message):
+    print(message)
 
 def on_messagemv(client, userdata, message):
         global personas, n_personas
@@ -53,7 +57,7 @@ def almacenar(lista,topic):
     if topic == topic74: ap='74' 
     elif topic == topic33: ap = '33'  
     else: ap = '44'
-    with open('./files/mqtt_message_mR{}_1m2.csv'.format(ap),mode="w", newline='\n') as newfile:
+    with open('./files/mqtt_message_mR{}_prueba.csv'.format(ap),mode="w", newline='\n') as newfile:
         writer = csv.writer(newfile)
         writer.writerow(lista)
 
@@ -81,7 +85,7 @@ def toma_muestra(topics):
         client.disconnect()
 
 
-#general(broker)
+general(broker)
 
 def camara():
     global clientmv , personas, n_personas
