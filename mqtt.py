@@ -42,22 +42,14 @@ def on_message(client, userdata, message):
 
 def filtro_max_min(message):
     message.sort()
-    minimo = min(message)
-    maximo = max(message) 
     n=round(0.1*len(message))
     datos = list(message[n:(len(message)-n)])
     print(datos)
     lst3 = []
     for value in message_dic:
         if value in datos:
-            print(value)
-            print(message_dic)
-            print(datos)
-            print(lst3)
             lst3.append(value)
-          
-            datos.remove(value)
-            
+            datos.remove(value)         
     print(message_dic)
     print(lst3)
     return lst3
@@ -76,7 +68,7 @@ def almacenar(lista,topic,distancia,version):
     if topic == topic74: ap='74' 
     elif topic == topic33: ap = '33'  
     else: ap = '44'
-    with open('./files/{}/mqtt_message_mR{}_{}.csv'.format(distancia,ap,version),mode="w", newline='\n') as newfile:
+    with open('./files/{}/mqtt_message_mR{}_{}.txt'.format(distancia,ap,version),mode="w", newline='\n') as newfile:
         writer = csv.writer(newfile)
         writer.writerow(lista)
 
@@ -85,7 +77,7 @@ def almacenar_fil(lista,topic,distancia,version):
     if topic == topic74: ap='74' 
     elif topic == topic33: ap = '33'  
     else: ap = '44'
-    with open('./files/{}/mqtt_message_mR{}_{}_filtrado.csv'.format(distancia,ap,version),mode="w", newline='\n') as newfile:
+    with open('./files/{}/mqtt_message_mR{}_{}_filtrado.txt'.format(distancia,ap,version),mode="w", newline='\n') as newfile:
         writer = csv.writer(newfile)
         writer.writerow(lista)
 
