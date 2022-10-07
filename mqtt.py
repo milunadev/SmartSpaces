@@ -47,9 +47,10 @@ def filtro_max_min(message):
     n=round(0.1*len(message))
     datos = message[n:(len(message)-n)]
     print(n)
-    print(message)
-    print(datos)
-    return datos
+    lst3 = [value for value in datos if value in message_dic] 
+    print(message_dic)
+    print(lst3)
+    return lst3
 
 def on_messagemv(client, userdata, message):
         global personas, n_personas
@@ -98,9 +99,10 @@ def toma_muestra(topics):
         client.on_message = on_message
         client.loop_start()
         time.sleep(50)
-        message_filtrado = filtro_max_min(message_dic)
-        almacenar_fil(message_filtrado,topic,distancia,version)
         almacenar(message_dic,topic,distancia,version)
+        message_dic_or = message_dic
+        message_filtrado = filtro_max_min(message_dic_or)
+        almacenar_fil(message_filtrado,topic,distancia,version)
         message_dic = []
         client.loop_stop()
         client.disconnect()
