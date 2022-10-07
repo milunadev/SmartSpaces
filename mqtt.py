@@ -48,7 +48,6 @@ def filtro_max_min(message):
     datos = list(message[n:(len(message)-n)])
     print(n)
     lst3 = []
-    #lst3 = [value for value in message_dic if value in datos] 
     for value in message_dic:
         if value in datos:
             lst3.append(value)
