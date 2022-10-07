@@ -46,7 +46,10 @@ def filtro_max_min(message):
     maximo = max(message) 
     n=round(0.1*len(message))
     datos = message[n:(len(message)-n)]
-    print(message,datos)
+    print(n)
+    print(message)
+    print(datos)
+    return datos
 
 def on_messagemv(client, userdata, message):
         global personas, n_personas
@@ -57,12 +60,21 @@ def on_messagemv(client, userdata, message):
         n_personas = mode(personas)
         print(personas, ' moda: ',n_personas)
 
-def almacenar(lista,topic):
+def almacenar(lista,topic,distancia,version):
     
     if topic == topic74: ap='74' 
     elif topic == topic33: ap = '33'  
     else: ap = '44'
-    with open('./files/mqtt_message_mR{}_prueba.csv'.format(ap),mode="w", newline='\n') as newfile:
+    with open('./files/{}/mqtt_message_mR{}_{}.csv'.format(distancia,ap,version),mode="w", newline='\n') as newfile:
+        writer = csv.writer(newfile)
+        writer.writerow(lista)
+
+def almacenar_fil(lista,topic,distancia,version):
+    
+    if topic == topic74: ap='74' 
+    elif topic == topic33: ap = '33'  
+    else: ap = '44'
+    with open('./files/{}/mqtt_message_mR{}_{}_filtrado.csv'.format(distancia,ap,version),mode="w", newline='\n') as newfile:
         writer = csv.writer(newfile)
         writer.writerow(lista)
 
@@ -77,15 +89,18 @@ def general(broker):
 
 def toma_muestra(topics):
     global message_dic
+    distancia = 'prueba'
+    version = '1'
     for topic in topics:
         client.connect(broker)
         client.subscribe(topic)
         print("suscrito a " + topic)
         client.on_message = on_message
         client.loop_start()
-        time.sleep(20)
-        filtro_max_min(message_dic)
-        almacenar(message_dic,topic)
+        time.sleep(50)
+        message_filtrado = filtro_max_min(message_dic)
+        almacenar_fil(message_filtrado,topic,distancia,version)
+        almacenar(message_dic,topic,distancia,version)
         message_dic = []
         client.loop_stop()
         client.disconnect()
