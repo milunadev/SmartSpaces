@@ -29,10 +29,11 @@ class WSConsumer_laboratorio(WebsocketConsumer):
     def connect(self): 
         self.accept() 
         metricas = sensores()
-        n_personas = str(camara()) #+ ' personas'
+        #n_personas = str(camara()) #+ ' personas'
+        n_personas = str(2) #+ ' personas'
         self.send(json.dumps({'temperatura':metricas[2],'humedad':metricas[0],'puerta':metricas[1],'personas':n_personas})) 
         sleep(2)
-        self.disconnect()
+        #self.disconnect()
 
     def disconnect(self): 
         print("Disconnecting") 

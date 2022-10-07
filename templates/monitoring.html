@@ -1,0 +1,24 @@
+{% extends "environment.html" %}
+
+{% load static %}
+
+{% block principal%}
+
+<div class="col-lg-8 mb-4 order-0">
+    <div class="card">
+        <div class="d-flex align-items-end row">
+            <div class="col-sm-8">
+                <div class="card-body">
+                    <h5 class="card-title text-primary"> IMAGEN ACTUAL DEL LABORATORIO </h5>
+                    <div class="text-center">
+                        <img id="snapshot" class="img-fluid " src={{url}} alt="...">    
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock principal%}
