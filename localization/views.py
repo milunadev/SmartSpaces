@@ -52,8 +52,7 @@ def landing(request):
     context['form'] = Reserva()   
     if request.method == "POST":
         sala = request.POST.get('salaescogida')
-        freserva = request.POST.get('freserva')
-        
+        freserva = request.POST.get('freserva')   
         request.session['sala']= sala
         data = {'sala': sala, 'freserva': freserva}
         return redirect(reservar, sala = sala, freserva= freserva)
