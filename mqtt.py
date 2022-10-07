@@ -44,8 +44,9 @@ def filtro_max_min(message):
     message.sort()
     minimo = min(message)
     maximo = max(message) 
-    
-    print(message)
+    n=round(0.1*len(message))
+    datos = message[n:(len(message)-n)]
+    print(message,datos)
 
 def on_messagemv(client, userdata, message):
         global personas, n_personas
