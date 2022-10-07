@@ -44,14 +44,14 @@ def filtro_max_min(message):
     message.sort()
     n=round(0.1*len(message))
     datos = list(message[n:(len(message)-n)])
-    print(datos)
+    print('ORDENA ',datos)
     lst3 = []
     for value in message_dic:
         if value in datos:
             lst3.append(value)
             datos.remove(value)         
     print(message_dic)
-    print(lst3)
+    print('FINAL ',lst3)
     return lst3
 
 def on_messagemv(client, userdata, message):
@@ -93,7 +93,7 @@ def general(broker):
 def toma_muestra(topics):
     global message_dic
     distancia = 'prueba'
-    version = '1'
+    version = '2'
     for topic in topics:
         client.connect(broker)
         client.subscribe(topic)
