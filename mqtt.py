@@ -100,7 +100,7 @@ def toma_muestra(topics):
         client.loop_start()
         time.sleep(50)
         almacenar(message_dic,topic,distancia,version)
-        message_dic_or = message_dic
+        message_dic_or = message_dic[:]
         message_filtrado = filtro_max_min(message_dic_or)
         almacenar_fil(message_filtrado,topic,distancia,version)
         message_dic = []
