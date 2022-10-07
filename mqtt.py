@@ -41,9 +41,11 @@ def on_message(client, userdata, message):
         #file.close()
 
 def filtro_max_min(message):
+    message.sort()
     minimo = min(message)
     maximo = max(message) 
-    print(minimo,maximo)
+    
+    print(message)
 
 def on_messagemv(client, userdata, message):
         global personas, n_personas
