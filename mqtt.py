@@ -34,7 +34,7 @@ def on_message(client, userdata, message):
             print(message['mrMac'] + '    ' + message['clientMac'] + '    ' +message['rssi']) 
         #print(message['mrMac'] + '    ' + message['clientMac'] + '    ' +message['rssi']) 
             message_dic.append(message['rssi'])
-        filtro_max_min(message_dic)
+        
         return message_dic
         #file = open('mqtt_message_mR74.txt',mode="w")
         #file.write(str(message_dic))
@@ -78,7 +78,8 @@ def toma_muestra(topics):
         print("suscrito a " + topic)
         client.on_message = on_message
         client.loop_start()
-        time.sleep(150)
+        time.sleep(20)
+        filtro_max_min(message_dic)
         almacenar(message_dic,topic)
         message_dic = []
         client.loop_stop()
