@@ -7,15 +7,17 @@ import numpy as np
  
 #import matplotlib.pyplot as plt
 #import numpy as np
-
 lista = []
-archivos = ["./mr74_49.txt","./mr74_6d.txt","./mr74_5b.txt","./mr44_6d.txt","./mr44_5b.txt","./mr44_49.txt","./mr44_49_b.txt","./mr33_6d.txt","./mr33_6d_b.txt","./mr33_5b.txt","./mr33_49.txt"]
+archivos = ["./files/prueba/mqtt_message_mR44_1.txt"]
 promedios = []
 for i in archivos:
     lista = []
     with open(i) as archivo:
         for linea in archivo:
-            lista.append(int(linea.strip()))
+            datos = (linea.rstrip()).split(',')
+            print(datos)
+            for i in datos:
+                lista.append(int(i))
             #print(linea)
 
     #print(lista)
