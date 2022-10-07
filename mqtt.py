@@ -47,10 +47,8 @@ def filtro_max_min(message):
     n=round(0.1*len(message))
     datos = message[n:(len(message)-n)]
     print(n)
-    lst3 = list(set(message_dic) & set(datos)) 
-    #lst3 = [value for value in message_dic if value in datos] 
+    lst3 = [value for value in messa if value in message_dic] 
     print(message_dic)
-    print(datos)
     print(lst3)
     return lst3
 
