@@ -33,7 +33,7 @@ def on_message(client, userdata, message):
         if message['clientMac']== '00:FA:B6:01:E8:5B': #00:FA:B6:01:E8:49': or message['clientMac'] == '00:FA:B6:01:E8:5B' or message['clientMac'] == '00:FA:B6:01:E8:6D':
             print(message['mrMac'] + '    ' + message['clientMac'] + '    ' +message['rssi']) 
         #print(message['mrMac'] + '    ' + message['clientMac'] + '    ' +message['rssi']) 
-            message_dic.append(message['rssi'])
+            message_dic.append(int(message['rssi']))
         
         return message_dic
         #file = open('mqtt_message_mR74.txt',mode="w")
@@ -41,7 +41,9 @@ def on_message(client, userdata, message):
         #file.close()
 
 def filtro_max_min(message):
-    print(message)
+    minimo = min(message)
+    maximo = max(message) 
+    print(minimo,maximo)
 
 def on_messagemv(client, userdata, message):
         global personas, n_personas
