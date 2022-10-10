@@ -1,4 +1,6 @@
+from logging import handlers
 import math
+import os
 from turtle import delay
 #import matplotlib 
 #matplotlib.use('TkAgg')
@@ -8,11 +10,13 @@ import numpy as np
 #import matplotlib.pyplot as plt
 #import numpy as np
 lista = []
-archivos = ["./files/prueba/mqtt_message_mR44_1.txt"]
+l_archivos = os.listdir("./files/4m")
+print(l_archivos)
+archivos = ["./files/1m/mqtt_message_mR33_1_5b_filtrado.txt","./files/1m/mqtt_message_mR33_1_6d_filtrado.txt","./files/1m/mqtt_message_mR33_1_49_filtrado.txt"]
 promedios = []
-for i in archivos:
+for i in l_archivos:
     lista = []
-    with open(i) as archivo:
+    with open("./files/4m/"+i) as archivo:
         for linea in archivo:
             datos = (linea.rstrip()).split(',')
             print(datos)
@@ -83,7 +87,7 @@ for i in archivos:
             """
             self.R = noise
 
-    test = KalmanFilter(0.01, 5)
+    test = KalmanFilter(0.01, 3)
     testData = lista
     filtrado = []
     for x in testData:
@@ -94,21 +98,23 @@ for i in archivos:
 
     #Gráficas
     lista1 = lista
-    plt.plot(lista1)   # Dibuja el gráfico
-    plt.xlabel("abscisa")   # Inserta el título del eje X
-    plt.ylabel("ordenada")   # Inserta el título del eje Y
+    plt.plot(lista1, marker='.',color = '#94e630',label = 'RSSI')   # Dibuja el gráfico
+    plt.xlabel("N° muestra (s)", fontsize = 10)
+    plt.ylabel("RSSI(dbm)", fontsize = 10)
     plt.ioff()   # Desactiva modo interactivo de dibujo
     lista2 = filtrado
-    plt.plot(lista2)   # No dibuja datos de lista2
+    #plt.plot(lista2)   # No dibuja datos de lista2
     plt.ion()   # Activa modo interactivo de dibujo
-    plt.plot(lista2)   # Dibuja datos de lista2 sin borrar datos de lista1
-    plt.show(block = True)
+    plt.plot(lista2,marker='.',color = '#fabbf4',label = 'RSSI Kalman')   # Dibuja datos de lista2 sin borrar datos de lista1
+    plt.legend(('RSSI','RSSI Kalman'), loc = 'lower center')
+    plt.axis([0,len(lista1),max(lista1)-3,min(lista1)+3])
     #delay(60)
     promedio_datos  = sum(lista)/len(lista)
     promedio_filtro = sum(filtrado)/len(filtrado)
 
     print("Promedio sin filtro: ", promedio_datos, "  Promedio con filtro: ",promedio_filtro)
     promedios.append(promedio_filtro)
-
+    #plt.show(block = True)
+    
 print("\n", promedios)
 print("El promedio final para un metro es: ",sum(promedios)/len(promedios))
