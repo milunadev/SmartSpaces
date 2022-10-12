@@ -103,7 +103,7 @@ def grafica_n(n_lista):
 RSSIo = -58.21809
 d0 = 2
 d = 4
-filtro_kalman(d,grafica='NO',calcula_n = 'SI')          
+#filtro_kalman(d,grafica='NO',calcula_n = 'NO')          
     
     
 

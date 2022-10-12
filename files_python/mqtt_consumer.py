@@ -50,7 +50,7 @@ def toma_muestra(topics):
         print("suscrito a " + topic)
         client.on_message = on_message
         client.loop_start()
-        time.sleep(3)
+        time.sleep(5)
         #message_dic_or = message_dic[:]
         #message_filtrado = filtro_max_min(message_dic_or)
         rssi_avg = kalman_lista(message_dic)
