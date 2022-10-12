@@ -1,7 +1,7 @@
 import math
-from files_python.mapa import graficar
+from mapa import graficar
 
-from mqtt import general
+from mqtt_consumer import general
 
 def MR44(RSSI):
     RSSIo = -49.50817
