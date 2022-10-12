@@ -3,6 +3,7 @@ import json
 import time
 from kalman import kalman_lista
 
+message_dic = []
 
 broker = '192.168.128.17'
 topic74 = 'meraki/v1/mr/N_611363649415560954/0C:8D:DB:D9:17:32/ble/#'
@@ -53,7 +54,7 @@ def toma_muestra(topics):
         #message_dic_or = message_dic[:]
         #message_filtrado = filtro_max_min(message_dic_or)
         rssi_avg = kalman_lista(message_dic)
-        rssi_avg_lista.append(rssi_avg_lista)
+        rssi_avg_lista.append(rssi_avg)
         message_dic = []
         client.loop_stop()
         client.disconnect()

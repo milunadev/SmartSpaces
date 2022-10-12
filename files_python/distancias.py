@@ -47,6 +47,7 @@ rssi_avg_lista = general()
 d_44 = MR44(rssi_avg_lista[0])
 d_74 = MR74(rssi_avg_lista[1])
 d_33 = MR33(rssi_avg_lista[2])
+print(d_44,d_74,d_33)
 
 [x,y]=trilateration(d_44,d_74,d_33)
 print(x,y)
