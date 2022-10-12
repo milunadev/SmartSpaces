@@ -1,4 +1,4 @@
-from types import NoneType
+
 import pymysql  
 import requests
 import datetime
@@ -43,7 +43,7 @@ def salas_id(sala_id):
 def periodos_ocupados(query):
     periodos = []
     print(query)
-    if query != NoneType:
+    if query != None:
         for i in query:
             hinicio = calcular_hora(i['hinicio'])
             hfinal = calcular_hora(i['hfinal'])

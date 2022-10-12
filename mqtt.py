@@ -18,7 +18,13 @@ topic44 = 'meraki/v1/mr/N_611363649415560954/F8:9E:28:74:51:F9/ble/#'
 topic_personas = '/merakimv/Q2GV-2V9V-NMDF/0'
 message_dic = []
 personas = []
-
+# 00:FA:B6:01:E8:6D
+# 00:FA:B6:01:E8:5B
+# 00:FA:B6:01:E8:49
+beacon_mac ='00:FA:B6:01:E8:6D'
+distancia = '5m'
+version = '1'
+beacon = '6d'
 
 def on_connect(client, userdata, flags, rc): 
       if rc==0: 
@@ -30,7 +36,7 @@ def on_message(client, userdata, message):
         global message_dic
         message = json.loads(message.payload.decode("utf-8")) 
         metrics = '\n' + message['mrMac'] + ',' + message['clientMac'] + ',' +message['rssi'] 
-        if message['clientMac']== '00:FA:B6:01:E8:5B': #00:FA:B6:01:E8:49': or message['clientMac'] == '00:FA:B6:01:E8:5B' or message['clientMac'] == '00:FA:B6:01:E8:6D':
+        if message['clientMac']== beacon_mac:
             print(message['mrMac'] + '    ' + message['clientMac'] + '    ' +message['rssi']) 
         #print(message['mrMac'] + '    ' + message['clientMac'] + '    ' +message['rssi']) 
             message_dic.append(int(message['rssi']))
@@ -63,21 +69,21 @@ def on_messagemv(client, userdata, message):
         n_personas = mode(personas)
         print(personas, ' moda: ',n_personas)
 
-def almacenar(lista,topic,distancia,version):
+def almacenar(lista,topic,distancia,version,beacon):
     
     if topic == topic74: ap='74' 
     elif topic == topic33: ap = '33'  
     else: ap = '44'
-    with open('./files/{}/mqtt_message_mR{}_{}.txt'.format(distancia,ap,version),mode="w", newline='\n') as newfile:
+    with open('./files/{}/mqtt_message_mR{}_{}_{}.txt'.format(distancia,ap,version,beacon),mode="w", newline='\n') as newfile:
         writer = csv.writer(newfile)
         writer.writerow(lista)
 
-def almacenar_fil(lista,topic,distancia,version):
+def almacenar_fil(lista,topic,distancia,version,beacon):
     
     if topic == topic74: ap='74' 
     elif topic == topic33: ap = '33'  
     else: ap = '44'
-    with open('./files/{}/mqtt_message_mR{}_{}_filtrado.txt'.format(distancia,ap,version),mode="w", newline='\n') as newfile:
+    with open('./files/{}/mqtt_message_mR{}_{}_{}_filtrado.txt'.format(distancia,ap,version,beacon),mode="w", newline='\n') as newfile:
         writer = csv.writer(newfile)
         writer.writerow(lista)
 
@@ -86,31 +92,30 @@ def general(broker):
     client = mqtt_client.Client('mqtt_client')
     client.on_connect = on_connect
     
-    topics = [topic44] #,topic33,topic44]
+    topics = [topic33] #,topic33,topic44]
     toma_muestra(topics)
     
 
 def toma_muestra(topics):
     global message_dic
-    distancia = 'prueba'
-    version = '2'
+    
     for topic in topics:
         client.connect(broker)
         client.subscribe(topic)
         print("suscrito a " + topic)
         client.on_message = on_message
         client.loop_start()
-        time.sleep(50)
-        almacenar(message_dic,topic,distancia,version)
+        time.sleep(120)
+        almacenar(message_dic,topic,distancia,version,beacon)
         message_dic_or = message_dic[:]
         message_filtrado = filtro_max_min(message_dic_or)
-        almacenar_fil(message_filtrado,topic,distancia,version)
+        almacenar_fil(message_filtrado,topic,distancia,version,beacon)
         message_dic = []
         client.loop_stop()
         client.disconnect()
 
 
-general(broker)
+#general(broker)
 
 def camara():
     global clientmv , personas, n_personas

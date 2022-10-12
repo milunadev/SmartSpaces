@@ -2,119 +2,116 @@ from logging import handlers
 import math
 import os
 from turtle import delay
-#import matplotlib 
-#matplotlib.use('TkAgg')
+from kalman_class import KalmanFilter
 import matplotlib.pyplot as plt
 import numpy as np
  
 #import matplotlib.pyplot as plt
 #import numpy as np
+
 lista = []
-l_archivos = os.listdir("./files/4m")
-print(l_archivos)
-archivos = ["./files/1m/mqtt_message_mR33_1_5b_filtrado.txt","./files/1m/mqtt_message_mR33_1_6d_filtrado.txt","./files/1m/mqtt_message_mR33_1_49_filtrado.txt"]
-promedios = []
-for i in l_archivos:
-    lista = []
-    with open("./files/4m/"+i) as archivo:
-        for linea in archivo:
-            datos = (linea.rstrip()).split(',')
-            print(datos)
-            for i in datos:
-                lista.append(int(i))
-            #print(linea)
-
-    #print(lista)
+n_lista = []
+promedios_rssi = []
 
 
-    class KalmanFilter:
-        cov = float('nan')
-        x = float('nan')
-        def __init__(self, R, Q):
-            """
-            Constructor
-            :param R: Process Noise
-            :param Q: Measurement Noise
-            """
-            self.A = 1
-            self.B = 0
-            self.C = 1
 
-            self.R = R
-            self.Q = Q
+                
+def listar_archivos(d):
+    l_archivos = os.listdir("./files/{}m".format(d))
+    l_archivos.remove('MR33') , l_archivos.remove('MR44'), l_archivos.remove('MR74')
+    return l_archivos
 
-        def filter(self, measurement):
-            """
-            Filters a measurement
-            :param measurement: The measurement value to be filtered
-            :return: The filtered value
-            """
-            u = 0
-            if math.isnan(self.x):
-                self.x = (1 / self.C) * measurement
-                self.cov = (1 / self.C) * self.Q * (1 / self.C)
-            else:
-                predX = (self.A * self.x) + (self.B * u)
-                predCov = ((self.A * self.cov) * self.A) + self.R
 
-                # Kalman Gain
-                K = predCov * self.C * (1 / ((self.C * predCov * self.C) + self.Q));
+def calculo_n(RSSI1m,avr_filtrado,d,d0):
+    global n_lista
+    n = (RSSI1m-avr_filtrado)/(10*math.log10(d/d0))
+    print("N es: ", n)
+    n_lista.append(n)
+    return n_lista
 
-                # Correction
-                self.x = predX + K * (measurement - (self.C * predX));
-                self.cov = predCov - (K * self.C * predCov);
-
-            return self.x
-
-        def last_measurement(self):
-            """
-            Returns the last measurement fed into the filter
-            :return: The last measurement fed into the filter
-            """
-            return self.x
-
-        def set_measurement_noise(self, noise):
-            """
-            Sets measurement noise
-            :param noise: The new measurement noise
-            """
-            self.Q = noise
-
-        def set_process_noise(self, noise):
-            """
-            Sets process noise
-            :param noise: The new process noise
-            """
-            self.R = noise
-
+# lista_datos son los valores del archivo, solo han pasado por el filtro de eliminar el max10% y min10%
+def filtro_kalman(d,grafica = 'NO',calcula_n = 'NO'):
+    l_archivos = listar_archivos(d)
+    for i in l_archivos:
+        if 'filtrado' in i:
+            print("PARA EL ARCHIVO: ",i) 
+            lista_datos = []
+            with open("./files/{}m/".format(d)+i) as archivo:
+                for linea in archivo:
+                    datos = (linea.rstrip()).split(',')
+                    #print(datos)
+                    for i in datos:
+                        lista_datos.append(int(i))
+            testData = lista_datos
+            filterData = []               
+            ##DEFINIR LOS PARÁMETROS DEL FILTRO KALMAN            
+            test = KalmanFilter(0.01, 3)
+            
+            for x in testData:
+                #print ("Data:", x)
+                filterData.append(test.filter(x))
+                #print ("Filtered Data: ", test.filter(x))
+            
+            promedio_datos  = sum(testData)/len(testData)
+            promedio_filtro = sum(filterData)/len(filterData)
+            print("Promedio sin filtro: ", promedio_datos, "  Promedio con filtro: ",promedio_filtro)
+            promedios_rssi.append(promedio_filtro)
+            print('RSSI prom: ',promedio_filtro)
+            
+            if grafica == 'SI':
+                graficas_rssi(testData,filterData)
+        
+            if calcula_n == 'SI':  
+                calculo_n(RSSIo,promedio_filtro,d,d0)
+            
+    print("El promedio final para {} metro(s) es: ".format(d),sum(promedios_rssi)/len(promedios_rssi))    
+    if calcula_n == 'SI':    
+        print("El promedio final de N para {} metro(s) es: ".format(d),sum(n_lista)/len(n_lista))
+        grafica_n(n_lista) 
+ 
+def kalman_lista(lista_datos):
+    print("Enrando al filtro Kalman, lista de entrada: ", lista_datos)
+    testData = lista_datos
+    filterData = []  
     test = KalmanFilter(0.01, 3)
-    testData = lista
-    filtrado = []
     for x in testData:
-        print ("Data:", x)
-        filtrado.append(test.filter(x))
-        print ("Filtered Data: ", test.filter(x))
-    print(filtrado)
+            filterData.append(test.filter(x))
+    promedio_filtro = sum(filterData)/len(filterData)
+    return promedio_filtro
+            
+def graficas_rssi(testData,filterData):    
+        #Gráficas
+        lista1 = testData
+        lista2 = filterData
+        plt.plot(lista1, marker='.',color = '#94e630',label = 'RSSI')   # Dibuja el gráfico
+        plt.xlabel("N° muestra (s)", fontsize = 10)
+        plt.ylabel("RSSI(dbm)", fontsize = 10)
+        plt.ioff()   # Desactiva modo interactivo de dibujo
+        #plt.plot(lista2)   # No dibuja datos de lista2
+        plt.ion()   # Activa modo interactivo de dibujo
+        plt.plot(lista2,marker='.',color = '#fabbf4',label = 'RSSI Kalman')   # Dibuja datos de lista2 sin borrar datos de lista1
+        plt.legend(('RSSI','RSSI Kalman'), loc = 'lower center')
+        plt.axis([0,len(lista1),max(lista1)-3,min(lista1)+3])
+        plt.show(block = True)
+  
+def grafica_n(n_lista):       
+    plt.plot(n_lista, marker='.',color = '#94e630',label = 'RSSI')   # Dibuja el gráfico
+    plt.legend(('n'), loc = 'lower center')
+    plt.show(block = True)
 
-    #Gráficas
-    lista1 = lista
-    plt.plot(lista1, marker='.',color = '#94e630',label = 'RSSI')   # Dibuja el gráfico
-    plt.xlabel("N° muestra (s)", fontsize = 10)
-    plt.ylabel("RSSI(dbm)", fontsize = 10)
-    plt.ioff()   # Desactiva modo interactivo de dibujo
-    lista2 = filtrado
-    #plt.plot(lista2)   # No dibuja datos de lista2
-    plt.ion()   # Activa modo interactivo de dibujo
-    plt.plot(lista2,marker='.',color = '#fabbf4',label = 'RSSI Kalman')   # Dibuja datos de lista2 sin borrar datos de lista1
-    plt.legend(('RSSI','RSSI Kalman'), loc = 'lower center')
-    plt.axis([0,len(lista1),max(lista1)-3,min(lista1)+3])
-    #delay(60)
-    promedio_datos  = sum(lista)/len(lista)
-    promedio_filtro = sum(filtrado)/len(filtrado)
-
-    print("Promedio sin filtro: ", promedio_datos, "  Promedio con filtro: ",promedio_filtro)
-    promedios.append(promedio_filtro)
-    #plt.show(block = True)
+#-53.01093   
+RSSIo = -58.21809
+d0 = 2
+d = 4
+filtro_kalman(d,grafica='NO',calcula_n = 'SI')          
     
-print("\n", promedios)
-print("El promedio final para un metro es: ",sum(promedios)/len(promedios))
+    
+
+
+#calculo_n(RSSI1m= -53.070601 , d, avr_filtrado=promedio_filtro )   
+
+
+
+
+
+
