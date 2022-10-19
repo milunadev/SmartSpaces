@@ -21,10 +21,10 @@ personas = []
 # 00:FA:B6:01:E8:6D
 # 00:FA:B6:01:E8:5B
 # 00:FA:B6:01:E8:49
-beacon_mac ='00:FA:B6:01:E8:6D'
-distancia = '5m'
-version = '1'
-beacon = '6d'
+beacon_mac ='00:FA:B6:01:E8:5B'
+distancia = '1m'
+version = '7'
+beacon = '5b'
 
 def on_connect(client, userdata, flags, rc): 
       if rc==0: 
@@ -115,7 +115,7 @@ def toma_muestra(topics):
         client.disconnect()
 
 
-#general(broker)
+general(broker)
 
 def camara():
     global clientmv , personas, n_personas

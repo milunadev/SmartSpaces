@@ -5,6 +5,7 @@ from paho.mqtt import client as mqtt_client
 import json
 import time
 import csv
+import time
 
 #topics
 #mr74  -> mosquitto_sub -t meraki/v1/mr/N_611363649415560954/0C:8D:DB:D9:17:32/ble/#
@@ -21,10 +22,10 @@ personas = []
 # 00:FA:B6:01:E8:6D
 # 00:FA:B6:01:E8:5B
 # 00:FA:B6:01:E8:49
-beacon_mac = '00:FA:B6:01:E8:49'
+beacon_mac = '00:FA:B6:01:E8:5B'
 distancia = '4m'
-version = '2'
-beacon = '49'
+version = '4'
+beacon = '5b'
 
 def on_connect(client, userdata, flags, rc): 
       if rc==0: 
@@ -93,7 +94,7 @@ def general(broker):
     client.on_connect = on_connect
     
     topics = [topic74] #,topic33,topic44]
-    toma_muestra(topics)
+    toma_muestra(topics) 
     
 
 def toma_muestra(topics):
@@ -105,7 +106,7 @@ def toma_muestra(topics):
         print("suscrito a " + topic)
         client.on_message = on_message
         client.loop_start()
-        time.sleep(120)
+        time.sleep(100)
         almacenar(message_dic,topic,distancia,version,beacon)
         message_dic_or = message_dic[:]
         message_filtrado = filtro_max_min(message_dic_or)
@@ -114,7 +115,7 @@ def toma_muestra(topics):
         client.loop_stop()
         client.disconnect()
 
-
+time.sleep(2)
 general(broker)
 
 def camara():

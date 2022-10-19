@@ -69,4 +69,4 @@ def general():
     rssi_avg_lista = toma_muestra(topics)
     return rssi_avg_lista 
 
-beacon_mac ='00:FA:B6:01:E8:6D'
+beacon_mac ='00:FA:B6:01:E8:5B'
