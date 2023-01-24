@@ -74,7 +74,7 @@ def almacenar(lista,topic,distancia,version,beacon):
     if topic == topic74: ap='74' 
     elif topic == topic33: ap = '33'  
     else: ap = '44'
-    with open('./files/{}/mqtt_message_mR{}_{}_{}.txt'.format(distancia,ap,version,beacon),mode="w", newline='\n') as newfile:
+    with open('./files2/{}/mqtt_message_mR{}_{}_{}.txt'.format(distancia,ap,version,beacon),mode="w", newline='\n') as newfile:
         writer = csv.writer(newfile)
         writer.writerow(lista)
 
@@ -90,8 +90,7 @@ def almacenar_fil(lista,topic,distancia,version,beacon):
 def general():
     global client 
     client = mqtt_client.Client('mqtt_client')
-    client.on_connect = on_connect
-    
+    client.on_connect = on_connect    
     topics = [topic33] #,topic33,topic44]
     toma_muestra(topics)
     

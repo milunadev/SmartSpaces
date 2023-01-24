@@ -75,7 +75,7 @@ def almacenar(lista,topic,distancia,version,beacon):
     if topic == topic74: ap='74' 
     elif topic == topic33: ap = '33'  
     else: ap = '44'
-    with open('./files/{}/mqtt_message_mR{}_{}_{}.txt'.format(distancia,ap,version,beacon),mode="w", newline='\n') as newfile:
+    with open('./files2/{}/mqtt_message_mR{}_{}_{}.txt'.format(distancia,ap,version,beacon),mode="w", newline='\n') as newfile:
         writer = csv.writer(newfile)
         writer.writerow(lista)
 
@@ -106,7 +106,7 @@ def toma_muestra(topics):
         print("suscrito a " + topic)
         client.on_message = on_message
         client.loop_start()
-        time.sleep(100)
+        time.sleep(15)
         almacenar(message_dic,topic,distancia,version,beacon)
         message_dic_or = message_dic[:]
         message_filtrado = filtro_max_min(message_dic_or)
